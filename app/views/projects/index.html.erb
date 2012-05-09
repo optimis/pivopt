@@ -1,0 +1,62 @@
+<% content_for :head do %>
+  <script type="text/javascript">
+    $(function() {
+    });
+  </script>
+<% end %>
+<span>Story Type:
+  <select id="sel_type">
+    <option value="all">All</option>
+    <option value="feature">Feature</option>
+    <option value="bug">Bug</option>
+    <option value="chore">Chore</option>
+  </select>
+</span>
+<span>Story State:
+  <select id="sel_state">
+    <option value="all">All</option>
+    <option value="finished">Finished</option>
+    <option value="accepted">Accepted</option>
+    <option value="delivered">delivered</option>
+    <option value="">Not yet start</option>
+  </select>
+</span>
+	
+<table id="story_table" width="100%" style='text-align:left' border='1'>
+
+<% @some_projects.each do |project| %>
+    <tr class="header">
+      <th colspan='7'>
+        <h3 class="bluetitle"><%= project.name %>&nbsp;
+        (Last activity on <%= truncate(project.last_activity_at.to_s, :length => 10, :omission => "") %>)</h3>
+      </th>
+    </tr>
+    <tr class="header">
+      <th>Story Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Created On</th>
+      <th>Type</th>
+      <th>State</th>
+      <th>Requester</th>
+      <th>Owner</th>
+    <tr>
+
+    <% project.stories.all(:state => 'delivered,accepted,started,finished,rejected').each do |story| %>
+      <tr class="story_row <%= story.story_type %> <%= story.current_state%>">
+        <td style='width: 5%'><%= link_to story.id, "https://www.pivotaltracker.com/story/show/#{story.id.to_s}", { :target => "_blank"} %></td>
+        <td style='width: 25%'><%= pp story.name %></td>
+        <td style='width: 25%'><%= pp truncate(story.description, :length => 150) %></td>
+        <td style='width: 10%'><%= pp truncate(story.created_at.to_s, :length => 10, :omission => "") %></td>
+        <td style='width: 5%'><%= image_tag(story.story_type+".jpg", :alt => story.story_type, :title => story.story_type) %></td>
+        <td style='width: 10%'><%= pp story.current_state %></td>
+        <td style='width: 10%'><%= pp story.requested_by %></td>
+        <td style='width: 10%'><%= pp story.owned_by %></td>
+      </tr>
+    <% end %>    
+  
+<% end %>
+
+</table>
+
+<br />

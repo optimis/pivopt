@@ -1,0 +1,2 @@
+token: your_pivotal_tracker_app_token_here
+projects: [1,2,3,4,5]
